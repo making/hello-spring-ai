@@ -1,6 +1,7 @@
 package com.example.hello;
 
 import am.ik.spring.http.client.RetryableClientHttpRequestInterceptor;
+import org.zalando.logbook.spring.LogbookClientHttpRequestInterceptor;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,7 +18,9 @@ public class HelloSpringAiApplication {
 
 
 	@Bean
-	public RestClientCustomizer restClientCustomizer() {
-		return restClientBuilder -> restClientBuilder.requestInterceptor(new RetryableClientHttpRequestInterceptor(new FixedBackOff(1000, 2)));
+	public RestClientCustomizer restClientCustomizer(LogbookClientHttpRequestInterceptor logbookClientHttpRequestInterceptor) {
+		return restClientBuilder -> restClientBuilder
+				.requestInterceptor(logbookClientHttpRequestInterceptor)
+				.requestInterceptor(new RetryableClientHttpRequestInterceptor(new FixedBackOff(1000, 2)));
 	}
 }
