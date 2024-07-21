@@ -1,0 +1,15 @@
+applications:
+- name: hello-spring-ai
+  random-route: true
+  instances: 1
+  memory: 768m
+  path: target/hello-spring-ai-0.0.1-SNAPSHOT.jar
+  buildpacks: 
+  - java_buildpack_offline
+  services:
+  - openai
+  env:
+    JBP_CONFIG_OPEN_JDK_JRE: '{jre: {version: 21.+}}'
+    SPRING_AI_OPENAI_BASEURL: ${vcap.services.openai.credentials.api_base}
+    SPRING_AI_OPENAI_APIKEY: ${vcap.services.openai.credentials.api_key}
+    SPRING_AI_OPENAI_CHAT_OPTIONS_MODEL: gpt-4o-mini
