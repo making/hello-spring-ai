@@ -2,6 +2,7 @@ package com.example.hello;
 
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -13,9 +14,9 @@ public class HelloController {
 	}
 
 	@GetMapping(path = "/")
-	public String hello() {
+	public String hello(@RequestParam(defaultValue = "Tell me a joke") String prompt) {
 		return this.chatClient.prompt()
 				.messages()
-				.user("Tell me a joke").call().content();
+				.user(prompt).call().content();
 	}
 }
