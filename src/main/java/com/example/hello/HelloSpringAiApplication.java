@@ -16,11 +16,11 @@ public class HelloSpringAiApplication {
 		SpringApplication.run(HelloSpringAiApplication.class, args);
 	}
 
-
 	@Bean
-	public RestClientCustomizer restClientCustomizer(LogbookClientHttpRequestInterceptor logbookClientHttpRequestInterceptor) {
-		return restClientBuilder -> restClientBuilder
-				.requestInterceptor(logbookClientHttpRequestInterceptor)
-				.requestInterceptor(new RetryableClientHttpRequestInterceptor(new FixedBackOff(1000, 2)));
+	public RestClientCustomizer restClientCustomizer(
+			LogbookClientHttpRequestInterceptor logbookClientHttpRequestInterceptor) {
+		return restClientBuilder -> restClientBuilder.requestInterceptor(logbookClientHttpRequestInterceptor)
+			.requestInterceptor(new RetryableClientHttpRequestInterceptor(new FixedBackOff(1000, 2)));
 	}
+
 }
