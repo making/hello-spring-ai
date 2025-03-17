@@ -24,6 +24,11 @@ public class HelloController {
 		return this.chatClient.prompt().messages().user(prompt).call().content();
 	}
 
+	@GetMapping(path = "/datetime")
+	public String dateTime(@RequestParam(defaultValue = "What time is it now?") String prompt) {
+		return this.chatClient.prompt().messages().user(prompt).tools(new DateTimeTools()).call().content();
+	}
+
 	@PostMapping(path = "/", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	public Flux<String> helloStream(@RequestBody String prompt) {
 		return this.chatClient.prompt()
