@@ -28,16 +28,6 @@ public class HelloController {
 		return this.chatClient.prompt().messages().user(prompt).call().content();
 	}
 
-	@GetMapping(path = "/datetime")
-	public String dateTime(@RequestParam(defaultValue = "What time is it now?") String prompt) {
-		return this.chatClient.prompt().messages().user(prompt).tools(new DateTimeTools()).call().content();
-	}
-
-	@GetMapping(path = "/mcp")
-	public String mcp(@RequestParam(defaultValue = "What time is it now?") String prompt) {
-		return this.chatClient.prompt().messages().user(prompt).tools(mcpTools).call().content();
-	}
-
 	@PostMapping(path = "/", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	public Flux<String> helloStream(@RequestBody String prompt) {
 		return this.chatClient.prompt()
@@ -47,6 +37,16 @@ public class HelloController {
 			.content()
 			.windowUntil(s -> s.endsWith(".") || s.endsWith("。"))
 			.flatMap(flux -> flux.collect(Collectors.joining()));
+	}
+
+	@GetMapping(path = "/datetime")
+	public String dateTime(@RequestParam(defaultValue = "What time is it now?") String prompt) {
+		return this.chatClient.prompt().messages().user(prompt).tools(new DateTimeTools()).call().content();
+	}
+
+	@GetMapping(path = "/mcp")
+	public String mcp(@RequestParam(defaultValue = "What time is it now?") String prompt) {
+		return this.chatClient.prompt().messages().user(prompt).tools(mcpTools).call().content();
 	}
 
 }
