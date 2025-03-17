@@ -2,6 +2,7 @@ package com.example.hello;
 
 import java.util.stream.Collectors;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,8 +16,11 @@ public class HelloController {
 
 	private final ChatClient chatClient;
 
-	public HelloController(ChatClient.Builder chatClientBuilder) {
+	private final SyncMcpToolCallbackProvider mcpTools;
+
+	public HelloController(ChatClient.Builder chatClientBuilder, SyncMcpToolCallbackProvider mcpTools) {
 		this.chatClient = chatClientBuilder.build();
+		this.mcpTools = mcpTools;
 	}
 
 	@GetMapping(path = "/")
@@ -27,6 +31,11 @@ public class HelloController {
 	@GetMapping(path = "/datetime")
 	public String dateTime(@RequestParam(defaultValue = "What time is it now?") String prompt) {
 		return this.chatClient.prompt().messages().user(prompt).tools(new DateTimeTools()).call().content();
+	}
+
+	@GetMapping(path = "/mcp")
+	public String mcp(@RequestParam(defaultValue = "What time is it now?") String prompt) {
+		return this.chatClient.prompt().messages().user(prompt).tools(mcpTools).call().content();
 	}
 
 	@PostMapping(path = "/", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
