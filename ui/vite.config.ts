@@ -6,6 +6,16 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
+      '/vanilla': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/datetime': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+      },
       '/mcp': {
         target: 'http://localhost:8080',
         changeOrigin: true,

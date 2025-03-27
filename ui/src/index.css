@@ -26,24 +26,101 @@ body {
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .header {
   display: flex;
   align-items: center;
-  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #4361ee;
+  color: white;
 }
 
 .header svg {
-  width: 30px;
-  height: 30px;
-  margin-right: 10px;
+  width: 28px;
+  height: 28px;
+  margin-right: 12px;
 }
 
 .header h1 {
-  font-size: 2.5rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: #000;
+}
+
+main {
+  padding: 1.5rem;
+}
+
+.endpoint-selector {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
+}
+
+.endpoint-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  color: #4361ee;
+}
+
+.endpoint-header svg {
+  margin-right: 8px;
+}
+
+.endpoint-header h3 {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.endpoint-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.endpoint-option {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: flex-start;
+  padding: 0.5rem;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.endpoint-option:hover {
+  background-color: #f1f3f9;
+}
+
+.endpoint-option input {
+  margin-top: 0.25rem;
+  margin-right: 0.75rem;
+}
+
+.endpoint-option label {
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.endpoint-option strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  color: #1a1a1a;
+}
+
+.endpoint-description {
+  font-size: 0.8rem;
+  color: #666;
+  line-height: 1.4;
 }
 
 .form-group {
@@ -52,7 +129,7 @@ body {
 
 .form-group label {
   display: block;
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   font-weight: 500;
   margin-bottom: 0.5rem;
   color: #333;
@@ -92,6 +169,7 @@ body {
 .btn-primary {
   background-color: #4361ee;
   color: white;
+  width: 100%;
 }
 
 .btn-primary:hover {
@@ -128,6 +206,7 @@ body {
   font-size: 1.25rem;
   font-weight: 600;
   color: #333;
+  margin-right: 0.75rem;
 }
 
 .response-header svg {
@@ -135,6 +214,16 @@ body {
   height: 20px;
   margin-right: 8px;
   color: #4361ee;
+}
+
+.endpoint-badge {
+  font-size: 0.8rem;
+  background-color: #e9ecff;
+  color: #4361ee;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+  text-transform: capitalize;
 }
 
 .response-content {
@@ -171,4 +260,18 @@ body {
 .error-container p:first-child {
   font-weight: 600;
   margin-bottom: 0.5rem;
+}
+
+@media (max-width: 640px) {
+  #root {
+    padding: 1rem;
+  }
+  
+  .endpoint-options {
+    flex-direction: column;
+  }
+  
+  .endpoint-option {
+    min-width: 100%;
+  }
 }

@@ -23,7 +23,7 @@ public class HelloController {
 		this.mcpTools = mcpTools;
 	}
 
-	@GetMapping(path = "/")
+	@GetMapping(path = { "/", "/vanilla" })
 	public String hello(@RequestParam(defaultValue = "Tell me a joke") String prompt) {
 		return this.chatClient.prompt().messages().user(prompt).call().content();
 	}
