@@ -1,16 +1,20 @@
 package com.example.hello;
 
+import jakarta.servlet.http.HttpSession;
 import java.util.stream.Collectors;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.memory.InMemoryChatMemory;
 import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 
 @RestController
@@ -20,14 +24,21 @@ public class HelloController {
 
 	private final SyncMcpToolCallbackProvider mcpTools;
 
-	public HelloController(ChatClient.Builder chatClientBuilder, SyncMcpToolCallbackProvider mcpTools) {
-		this.chatClient = chatClientBuilder.build();
+	private final ChatMemory chatMemory = new InMemoryChatMemory();
+
+	public HelloController(ChatClient.Builder chatClientBuilder, SyncMcpToolCallbackProvider mcpTools,
+			HttpSession httpSession) {
+		this.chatClient = chatClientBuilder
+			.defaultAdvisors(new PerSessionMessageChatMemoryAdvisor(this.chatMemory, httpSession))
+			.build();
 		this.mcpTools = mcpTools;
 	}
 
 	@GetMapping(path = "/", produces = MediaType.TEXT_HTML_VALUE)
-	public Resource index() {
-		return new ClassPathResource("META-INF/resources/index.html");
+	public ResponseEntity<Void> index(UriComponentsBuilder uriComponentsBuilder) {
+		return ResponseEntity.status(HttpStatus.SEE_OTHER)
+			.location(uriComponentsBuilder.path("/index.html").build().toUri())
+			.build();
 	}
 
 	@GetMapping(path = { "/", "/vanilla" })
