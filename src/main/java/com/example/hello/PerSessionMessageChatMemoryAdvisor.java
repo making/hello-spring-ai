@@ -27,7 +27,6 @@ public class PerSessionMessageChatMemoryAdvisor implements CallAroundAdvisor, St
 	@Override
 	public AdvisedResponse aroundCall(AdvisedRequest advisedRequest, CallAroundAdvisorChain chain) {
 		String sessionId = httpSession.getId();
-		System.out.println("sessionId: " + sessionId);
 		MessageChatMemoryAdvisor delegate = new MessageChatMemoryAdvisor(chatMemory, sessionId,
 				AbstractChatMemoryAdvisor.DEFAULT_CHAT_MEMORY_RESPONSE_SIZE);
 		return delegate.aroundCall(advisedRequest, chain);
