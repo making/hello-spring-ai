@@ -2,12 +2,54 @@ import { useState } from 'react'
 import { MessageCircle, Send, Loader2, Settings } from 'lucide-react'
 import './App.css'
 
+// Endpoint option component
+const EndpointOption = ({ id, value, label, description, checked, onChange }) => {
+  return (
+    <div className="endpoint-option">
+      <input 
+        type="radio" 
+        id={id} 
+        name="endpoint" 
+        value={value}
+        checked={checked}
+        onChange={onChange}
+      />
+      <label htmlFor={id}>
+        <strong>{label}</strong>
+        <span className="endpoint-description">{description}</span>
+      </label>
+    </div>
+  )
+}
+
 function App() {
   const [prompt, setPrompt] = useState('')
   const [response, setResponse] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [endpoint, setEndpoint] = useState('/vanilla')
+
+  // Endpoint options data
+  const endpointOptions = [
+    {
+      id: "vanilla",
+      value: "/vanilla",
+      label: "Vanilla Chat",
+      description: "Basic chat without any additional tools"
+    },
+    {
+      id: "datetime",
+      value: "/datetime",
+      label: "DateTime Chat",
+      description: "Chat with access to date and time tools"
+    },
+    {
+      id: "mcp",
+      value: "/mcp",
+      label: "MCP Server",
+      description: "Chat connected to the MCP server integration"
+    }
+  ]
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -56,50 +98,17 @@ function App() {
           </div>
           
           <div className="endpoint-options">
-            <div className="endpoint-option">
-              <input 
-                type="radio" 
-                id="vanilla" 
-                name="endpoint" 
-                value="/vanilla"
-                checked={endpoint === '/vanilla'}
+            {endpointOptions.map(option => (
+              <EndpointOption
+                key={option.id}
+                id={option.id}
+                value={option.value}
+                label={option.label}
+                description={option.description}
+                checked={endpoint === option.value}
                 onChange={handleEndpointChange}
               />
-              <label htmlFor="vanilla">
-                <strong>Vanilla Chat</strong>
-                <span className="endpoint-description">Basic chat without any additional tools</span>
-              </label>
-            </div>
-            
-            <div className="endpoint-option">
-              <input 
-                type="radio" 
-                id="datetime" 
-                name="endpoint" 
-                value="/datetime"
-                checked={endpoint === '/datetime'}
-                onChange={handleEndpointChange}
-              />
-              <label htmlFor="datetime">
-                <strong>DateTime Chat</strong>
-                <span className="endpoint-description">Chat with access to date and time tools</span>
-              </label>
-            </div>
-            
-            <div className="endpoint-option">
-              <input 
-                type="radio" 
-                id="mcp" 
-                name="endpoint" 
-                value="/mcp"
-                checked={endpoint === '/mcp'}
-                onChange={handleEndpointChange}
-              />
-              <label htmlFor="mcp">
-                <strong>MCP Server</strong>
-                <span className="endpoint-description">Chat connected to the MCP server integration</span>
-              </label>
-            </div>
+            ))}
           </div>
         </div>
 
