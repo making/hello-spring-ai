@@ -181,6 +181,26 @@ main {
   cursor: not-allowed;
 }
 
+.btn-danger {
+  background-color: #ef4444;
+  color: white;
+}
+
+.btn-danger:hover {
+  background-color: #dc2626;
+}
+
+.btn-danger:disabled {
+  background-color: #fca5a5;
+  cursor: not-allowed;
+}
+
+.clear-chat-container {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
 .btn svg {
   margin-right: 8px;
 }

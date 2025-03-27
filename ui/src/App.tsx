@@ -1,5 +1,5 @@
-import { useState, ChangeEvent, FormEvent } from 'react';
-import { Loader2, MessageCircle, Send, Settings } from 'lucide-react';
+import {ChangeEvent, FormEvent, useState} from 'react';
+import {Loader2, MessageCircle, Send, Settings, Trash2} from 'lucide-react';
 import './App.css';
 
 // Types definition
@@ -41,8 +41,20 @@ interface ResponseDisplayProps {
     endpoint: string;
 }
 
+interface ClearChatButtonProps {
+    onClick: () => void;
+    isLoading: boolean;
+}
+
 // Endpoint option component
-const EndpointOption: React.FC<EndpointOptionProps> = ({id, value, label, description, checked, onChange}) => {
+const EndpointOption: React.FC<EndpointOptionProps> = ({
+    id,
+    value,
+    label,
+    description,
+    checked,
+    onChange
+}) => {
     return (
         <div className="endpoint-option">
             <input
@@ -72,7 +84,11 @@ const Header: React.FC = () => {
 };
 
 // Endpoint selector component
-const EndpointSelector: React.FC<EndpointSelectorProps> = ({endpoint, onEndpointChange, endpointOptions}) => {
+const EndpointSelector: React.FC<EndpointSelectorProps> = ({
+    endpoint,
+    onEndpointChange,
+    endpointOptions
+}) => {
     return (
         <div className="endpoint-selector">
             <div className="endpoint-header">
@@ -163,6 +179,21 @@ const ResponseDisplay: React.FC<ResponseDisplayProps> = ({response, endpoint}) =
     );
 };
 
+// Clear chat button component
+const ClearChatButton: React.FC<ClearChatButtonProps> = ({onClick, isLoading}) => {
+    return (
+        <button
+            className="btn btn-danger"
+            onClick={onClick}
+            disabled={isLoading}
+            type="button"
+        >
+            <Trash2 className="mr-2"/>
+            Clear Chat
+        </button>
+    );
+};
+
 const App: React.FC = () => {
     const [prompt, setPrompt] = useState('');
     const [response, setResponse] = useState('');
@@ -228,6 +259,29 @@ const App: React.FC = () => {
         setPrompt(e.target.value);
     };
 
+    const handleClearChat = async () => {
+        setIsLoading(true);
+        try {
+            const response = await fetch('/clear', {
+                method: 'DELETE'
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+
+            // Clear conversation state
+            setPrompt('');
+            setResponse('');
+            setError('');
+        } catch (err) {
+            setError(
+                err instanceof Error ? err.message : 'An error occurred while clearing the chat');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     return (
         <div className="app-container">
             <Header/>
@@ -252,6 +306,14 @@ const App: React.FC = () => {
                     response={response}
                     endpoint={endpoint}
                 />
+
+                {/* Clear chat button at bottom of page */}
+                <div className="clear-chat-container">
+                    <ClearChatButton
+                        onClick={handleClearChat}
+                        isLoading={isLoading}
+                    />
+                </div>
             </main>
         </div>
     );
