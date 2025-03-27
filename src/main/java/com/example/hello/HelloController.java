@@ -3,6 +3,8 @@ package com.example.hello;
 import java.util.stream.Collectors;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +23,11 @@ public class HelloController {
 	public HelloController(ChatClient.Builder chatClientBuilder, SyncMcpToolCallbackProvider mcpTools) {
 		this.chatClient = chatClientBuilder.build();
 		this.mcpTools = mcpTools;
+	}
+
+	@GetMapping(path = "/", produces = MediaType.TEXT_HTML_VALUE)
+	public Resource index() {
+		return new ClassPathResource("META-INF/resources/index.html");
 	}
 
 	@GetMapping(path = { "/", "/vanilla" })

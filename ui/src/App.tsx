@@ -1,9 +1,48 @@
-import {useState} from 'react'
-import {Loader2, MessageCircle, Send, Settings} from 'lucide-react'
-import './App.css'
+import { useState, ChangeEvent, FormEvent } from 'react';
+import { Loader2, MessageCircle, Send, Settings } from 'lucide-react';
+import './App.css';
+
+// Types definition
+interface EndpointOption {
+    id: string;
+    value: string;
+    label: string;
+    description: string;
+}
+
+interface EndpointOptionProps {
+    id: string;
+    value: string;
+    label: string;
+    description: string;
+    checked: boolean;
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
+}
+
+interface EndpointSelectorProps {
+    endpoint: string;
+    onEndpointChange: (e: ChangeEvent<HTMLInputElement>) => void;
+    endpointOptions: EndpointOption[];
+}
+
+interface PromptFormProps {
+    prompt: string;
+    onPromptChange: (e: ChangeEvent<HTMLTextAreaElement>) => void;
+    onSubmit: (e: FormEvent<HTMLFormElement>) => void;
+    isLoading: boolean;
+}
+
+interface ErrorMessageProps {
+    message: string;
+}
+
+interface ResponseDisplayProps {
+    response: string;
+    endpoint: string;
+}
 
 // Endpoint option component
-const EndpointOption = ({id, value, label, description, checked, onChange}) => {
+const EndpointOption: React.FC<EndpointOptionProps> = ({id, value, label, description, checked, onChange}) => {
     return (
         <div className="endpoint-option">
             <input
@@ -19,21 +58,21 @@ const EndpointOption = ({id, value, label, description, checked, onChange}) => {
                 <span className="endpoint-description">{description}</span>
             </label>
         </div>
-    )
-}
+    );
+};
 
 // Header component
-const Header = () => {
+const Header: React.FC = () => {
     return (
         <header className="header">
             <MessageCircle/>
             <h1>AI Prompt</h1>
         </header>
-    )
-}
+    );
+};
 
 // Endpoint selector component
-const EndpointSelector = ({endpoint, onEndpointChange, endpointOptions}) => {
+const EndpointSelector: React.FC<EndpointSelectorProps> = ({endpoint, onEndpointChange, endpointOptions}) => {
     return (
         <div className="endpoint-selector">
             <div className="endpoint-header">
@@ -55,11 +94,11 @@ const EndpointSelector = ({endpoint, onEndpointChange, endpointOptions}) => {
                 ))}
             </div>
         </div>
-    )
-}
+    );
+};
 
 // Prompt form component
-const PromptForm = ({prompt, onPromptChange, onSubmit, isLoading}) => {
+const PromptForm: React.FC<PromptFormProps> = ({prompt, onPromptChange, onSubmit, isLoading}) => {
     return (
         <form onSubmit={onSubmit}>
             <div className="form-group">
@@ -91,24 +130,24 @@ const PromptForm = ({prompt, onPromptChange, onSubmit, isLoading}) => {
                 )}
             </button>
         </form>
-    )
-}
+    );
+};
 
 // Error message component
-const ErrorMessage = ({message}) => {
-    if (!message) return null
+const ErrorMessage: React.FC<ErrorMessageProps> = ({message}) => {
+    if (!message) return null;
 
     return (
         <div className="error-container">
             <p>Error</p>
             <p>{message}</p>
         </div>
-    )
-}
+    );
+};
 
 // Response display component
-const ResponseDisplay = ({response, endpoint}) => {
-    if (!response) return null
+const ResponseDisplay: React.FC<ResponseDisplayProps> = ({response, endpoint}) => {
+    if (!response) return null;
 
     return (
         <div className="response-container">
@@ -121,18 +160,18 @@ const ResponseDisplay = ({response, endpoint}) => {
                 {response}
             </div>
         </div>
-    )
-}
+    );
+};
 
-function App() {
-    const [prompt, setPrompt] = useState('')
-    const [response, setResponse] = useState('')
-    const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState('')
-    const [endpoint, setEndpoint] = useState('/vanilla')
+const App: React.FC = () => {
+    const [prompt, setPrompt] = useState('');
+    const [response, setResponse] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [endpoint, setEndpoint] = useState('/vanilla');
 
     // Endpoint options data
-    const endpointOptions = [
+    const endpointOptions: EndpointOption[] = [
         {
             id: "vanilla",
             value: "/vanilla",
@@ -151,43 +190,43 @@ function App() {
             label: "MCP Server",
             description: "Chat connected to the MCP server integration"
         }
-    ]
+    ];
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
         if (!prompt.trim()) {
-            return
+            return;
         }
 
-        setIsLoading(true)
-        setError('')
-        setResponse('')
+        setIsLoading(true);
+        setError('');
+        setResponse('');
 
         try {
-            const params = new URLSearchParams({prompt})
-            const response = await fetch(`${endpoint}?${params}`)
+            const params = new URLSearchParams({prompt});
+            const response = await fetch(`${endpoint}?${params}`);
 
             if (!response.ok) {
-                throw new Error(`Error: ${response.status}`)
+                throw new Error(`Error: ${response.status}`);
             }
 
-            const data = await response.text()
-            setResponse(data)
+            const data = await response.text();
+            setResponse(data);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'An unknown error occurred')
+            setError(err instanceof Error ? err.message : 'An unknown error occurred');
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
-    }
+    };
 
-    const handleEndpointChange = (e) => {
-        setEndpoint(e.target.value)
-    }
+    const handleEndpointChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setEndpoint(e.target.value);
+    };
 
-    const handlePromptChange = (e) => {
-        setPrompt(e.target.value)
-    }
+    const handlePromptChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
+        setPrompt(e.target.value);
+    };
 
     return (
         <div className="app-container">
@@ -215,7 +254,7 @@ function App() {
                 />
             </main>
         </div>
-    )
-}
+    );
+};
 
-export default App
+export default App;

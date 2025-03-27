@@ -39,6 +39,20 @@
 			<artifactId>micrometer-tracing-bridge-otel</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>io.opentelemetry</groupId>
+			<artifactId>opentelemetry-exporter-otlp</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>io.opentelemetry</groupId>
+					<artifactId>opentelemetry-exporter-sender-okhttp</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>io.opentelemetry</groupId>
+			<artifactId>opentelemetry-exporter-sender-jdk</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>am.ik.spring</groupId>
 			<artifactId>retryable-client-http-request-interceptor</artifactId>
 			<version>0.7.0</version>
@@ -77,6 +91,55 @@
 						<goals>
 							<goal>validate</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.github.eirslett</groupId>
+				<artifactId>frontend-maven-plugin</artifactId>
+				<version>1.15.1</version>
+				<configuration>
+					<installDirectory>target</installDirectory>
+					<nodeVersion>v22.14.0</nodeVersion>
+				</configuration>
+				<executions>
+					<execution>
+						<id>install node and npm</id>
+						<goals>
+							<goal>install-node-and-npm</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>npm install ui</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<configuration>
+							<arguments>install</arguments>
+							<workingDirectory>${project.basedir}/ui</workingDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm run lint ui</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<phase>test</phase>
+						<configuration>
+							<arguments>run lint</arguments>
+							<workingDirectory>${project.basedir}/ui</workingDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>npm run build ui</id>
+						<goals>
+							<goal>npm</goal>
+						</goals>
+						<phase>compile</phase>
+						<configuration>
+							<arguments>run build</arguments>
+							<workingDirectory>${project.basedir}/ui</workingDirectory>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
