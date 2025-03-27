@@ -36,7 +36,7 @@ public class HelloController {
 			.stream()
 			.content()
 			.windowUntil(s -> s.endsWith(".") || s.endsWith("。"))
-			.flatMap(flux -> flux.collect(Collectors.joining()));
+			.flatMap(flux -> flux.map(String::trim).collect(Collectors.joining()));
 	}
 
 	@GetMapping(path = "/datetime")
@@ -47,6 +47,18 @@ public class HelloController {
 	@GetMapping(path = "/mcp")
 	public String mcp(@RequestParam(defaultValue = "What time is it now?") String prompt) {
 		return this.chatClient.prompt().messages().user(prompt).tools(mcpTools).call().content();
+	}
+
+	@PostMapping(path = "/mcp", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	public Flux<String> mcpStream(@RequestBody String prompt) {
+		return this.chatClient.prompt()
+			.messages()
+			.user(prompt)
+			.tools(mcpTools)
+			.stream()
+			.content()
+			.windowUntil(s -> s.endsWith(".") || s.endsWith("。"))
+			.flatMap(flux -> flux.map(String::trim).collect(Collectors.joining()));
 	}
 
 }
