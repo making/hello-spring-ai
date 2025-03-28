@@ -1,10 +1,12 @@
 package com.example.hello;
 
 import jakarta.servlet.http.HttpSession;
+import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.InMemoryChatMemory;
+import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -83,6 +85,12 @@ public class HelloController {
 	@DeleteMapping(path = "/clear")
 	public void clearChatMemory(HttpSession session) {
 		this.chatMemory.clear(session.getId());
+	}
+
+	@GetMapping(path = "/messages")
+	public List<Message> chatMessages(HttpSession session,
+			@RequestParam(required = false, defaultValue = "30") int lastN) {
+		return this.chatMemory.get(session.getId(), lastN);
 	}
 
 }
