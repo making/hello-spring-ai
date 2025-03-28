@@ -10,7 +10,7 @@ public class DateTimeTools {
 
 	private final Logger logger = LoggerFactory.getLogger(DateTimeTools.class);
 
-	@Tool(description = "Get the current date and time in the user's timezone")
+	@Tool(description = "Get the current date and time in the user timezone")
 	public String getCurrentDateTime() {
 		logger.info("Calling getCurrentDateTime()");
 		return LocalDateTime.now().atZone(LocaleContextHolder.getTimeZone().toZoneId()).toString();
