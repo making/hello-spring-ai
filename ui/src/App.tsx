@@ -306,6 +306,8 @@ const App: React.FC = () => {
         // Optimistically add user message to the UI
         setMessages(prevMessages => [...prevMessages, userMessage]);
 
+        // Clear the input field after sending
+        setPrompt('');
         try {
             const params = new URLSearchParams({prompt});
             const response = await fetch(`${endpoint}?${params}`);
@@ -332,11 +334,11 @@ const App: React.FC = () => {
             };
 
             setMessages(prevMessages => [...prevMessages, assistantMessage]);
-            setPrompt(''); // Clear the input field after sending
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An unknown error occurred');
         } finally {
             setIsLoading(false);
+
 
             // Refresh messages to ensure we have the latest state
             await fetchMessages();
