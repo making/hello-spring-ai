@@ -11,7 +11,7 @@ Hello Spring AI is a Spring Boot application that provides a chat interface with
 
 ## Endpoints
 
-### GET /
+### GET / or /vanilla
 
 Returns a response based on a user-provided prompt. Default prompt is "Tell me a joke".
 
@@ -49,9 +49,32 @@ To run the application, ensure you have Java and Maven installed. Clone the repo
 ./mvnw spring-boot:run -Dspring-boot.run.arguments=--spring.ai.openai.api-key=sk-YOUR_API_KEY
 ```
 
+To create an executable JAR file, run:
+
+```bash
+./mvnw clean package -DskipTests
+```
+
+You can then run the application using:
+
+```bash
+java -jar target/hello-spring-ai-0.0.1-SNAPSHOT.jar --spring.ai.openai.api-key=sk-YOUR_API_KEY
+```
+
+Building the executable JAR also builds a convenient UI.
+
+You can switch to any OpenAI compatible API endpoint by setting the following properties:
+
+* `spring.ai.openai.base-url`
+* `spring.ai.openai.chat.options.model`
+
 ## Usage
 
 Access the application at `http://localhost:8080` and interact with the endpoints.
+
+When running the executable JAR, you can access the UI in your browser at `http://localhost:8080`.
+
+<img width="1024" alt="Image" src="https://github.com/user-attachments/assets/0b9b68f3-bfad-4a0c-81b4-cb102c106b42" />
 
 ## Contributing
 
