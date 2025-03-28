@@ -123,6 +123,61 @@ main {
   line-height: 1.4;
 }
 
+/* Message List Styles */
+.message-list {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.message-item {
+  display: flex;
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.user-message {
+  background-color: #f1f3f9;
+}
+
+.assistant-message {
+  background-color: #f8f9fa;
+  border: 1px solid #e1e1e1;
+}
+
+.message-avatar {
+  margin-right: 12px;
+  display: flex;
+  align-items: flex-start;
+  color: #4361ee;
+}
+
+.user-message .message-avatar {
+  color: #333;
+}
+
+.message-content {
+  flex: 1;
+}
+
+.message-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.message-sender {
+  font-weight: 600;
+  font-size: 0.9rem;
+  margin-right: 8px;
+}
+
+.message-text {
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
 .form-group {
   margin-bottom: 1.5rem;
 }
@@ -137,7 +192,7 @@ main {
 
 .form-control {
   width: 100%;
-  min-height: 180px;
+  min-height: 120px; /* Reduced height since we already show conversation */
   padding: 1rem;
   font-size: 1rem;
   border: 2px solid #ccc;
@@ -205,37 +260,6 @@ main {
   margin-right: 8px;
 }
 
-.response-container {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  background-color: white;
-  border-radius: 8px;
-  border: 1px solid #e1e1e1;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-}
-
-.response-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #eaeaea;
-}
-
-.response-header h2 {
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: #333;
-  margin-right: 0.75rem;
-}
-
-.response-header svg {
-  width: 20px;
-  height: 20px;
-  margin-right: 8px;
-  color: #4361ee;
-}
-
 .endpoint-badge {
   font-size: 0.8rem;
   background-color: #e9ecff;
@@ -244,15 +268,6 @@ main {
   border-radius: 4px;
   font-weight: 500;
   text-transform: capitalize;
-}
-
-.response-content {
-  white-space: pre-wrap;
-  background-color: #f8f9fa;
-  padding: 1rem;
-  border-radius: 6px;
-  min-height: 120px;
-  line-height: 1.5;
 }
 
 .spinner {

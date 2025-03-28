@@ -1,5 +1,5 @@
-import {ChangeEvent, FormEvent, useState} from 'react';
-import {Loader2, MessageCircle, Send, Settings, Trash2} from 'lucide-react';
+import {ChangeEvent, FormEvent, useState, useEffect} from 'react';
+import {Loader2, MessageCircle, Send, Settings, Trash2, User} from 'lucide-react';
 import './App.css';
 
 // Types definition
@@ -36,8 +36,28 @@ interface ErrorMessageProps {
     message: string;
 }
 
-interface ResponseDisplayProps {
-    response: string;
+interface Message {
+    messageType: 'USER' | 'ASSISTANT';
+    metadata: {
+        messageType: string;
+        finishReason?: string;
+        refusal?: string;
+        index?: number;
+        id?: string;
+        role?: string;
+    };
+    media: any[];
+    text: string;
+    toolCalls?: any[];
+}
+
+interface MessageListProps {
+    messages: Message[];
+    endpoint: string;
+}
+
+interface MessageItemProps {
+    message: Message;
     endpoint: string;
 }
 
@@ -161,20 +181,41 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({message}) => {
     );
 };
 
-// Response display component
-const ResponseDisplay: React.FC<ResponseDisplayProps> = ({response, endpoint}) => {
-    if (!response) return null;
+// Message item component
+const MessageItem: React.FC<MessageItemProps> = ({message, endpoint}) => {
+    const isUser = message.messageType === 'USER';
 
     return (
-        <div className="response-container">
-            <div className="response-header">
-                <MessageCircle/>
-                <h2>Response:</h2>
-                <span className="endpoint-badge">{endpoint.substring(1)}</span>
+        <div className={`message-item ${isUser ? 'user-message' : 'assistant-message'}`}>
+            <div className="message-avatar">
+                {isUser ? <User size={20} /> : <MessageCircle size={20} />}
             </div>
-            <div className="response-content">
-                {response}
+            <div className="message-content">
+                <div className="message-header">
+                    <span className="message-sender">{isUser ? 'You' : 'Assistant'}</span>
+                    {!isUser && <span className="endpoint-badge">{endpoint.substring(1)}</span>}
+                </div>
+                <div className="message-text">
+                    {message.text}
+                </div>
             </div>
+        </div>
+    );
+};
+
+// Message list component
+const MessageList: React.FC<MessageListProps> = ({messages, endpoint}) => {
+    if (!messages || messages.length === 0) return null;
+
+    return (
+        <div className="message-list">
+            {messages.map((message, index) => (
+                <MessageItem 
+                    key={`${message.messageType}-${index}`} 
+                    message={message} 
+                    endpoint={endpoint} 
+                />
+            ))}
         </div>
     );
 };
@@ -196,10 +237,29 @@ const ClearChatButton: React.FC<ClearChatButtonProps> = ({onClick, isLoading}) =
 
 const App: React.FC = () => {
     const [prompt, setPrompt] = useState('');
-    const [response, setResponse] = useState('');
+    const [messages, setMessages] = useState<Message[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [endpoint, setEndpoint] = useState('/vanilla');
+
+    // Fetch message history when component mounts
+    useEffect(() => {
+        fetchMessages();
+    }, []);
+
+    // Fetch message history
+    const fetchMessages = async () => {
+        try {
+            const response = await fetch('/messages');
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setMessages(data);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to load message history');
+        }
+    };
 
     // Endpoint options data
     const endpointOptions: EndpointOption[] = [
@@ -232,7 +292,19 @@ const App: React.FC = () => {
 
         setIsLoading(true);
         setError('');
-        setResponse('');
+
+        // Create user message
+        const userMessage: Message = {
+            messageType: 'USER',
+            metadata: {
+                messageType: 'USER'
+            },
+            media: [],
+            text: prompt
+        };
+
+        // Optimistically add user message to the UI
+        setMessages(prevMessages => [...prevMessages, userMessage]);
 
         try {
             const params = new URLSearchParams({prompt});
@@ -242,12 +314,32 @@ const App: React.FC = () => {
                 throw new Error(`Error: ${response.status}`);
             }
 
-            const data = await response.text();
-            setResponse(data);
+            const responseText = await response.text();
+            
+            // Add assistant response to messages
+            const assistantMessage: Message = {
+                messageType: 'ASSISTANT',
+                metadata: {
+                    messageType: 'ASSISTANT',
+                    finishReason: 'STOP',
+                    refusal: '',
+                    index: 0,
+                    role: 'ASSISTANT'
+                },
+                media: [],
+                text: responseText,
+                toolCalls: []
+            };
+
+            setMessages(prevMessages => [...prevMessages, assistantMessage]);
+            setPrompt(''); // Clear the input field after sending
         } catch (err) {
             setError(err instanceof Error ? err.message : 'An unknown error occurred');
         } finally {
             setIsLoading(false);
+
+            // Refresh messages to ensure we have the latest state
+            await fetchMessages();
         }
     };
 
@@ -272,7 +364,7 @@ const App: React.FC = () => {
 
             // Clear conversation state
             setPrompt('');
-            setResponse('');
+            setMessages([]);
             setError('');
         } catch (err) {
             setError(
@@ -293,6 +385,11 @@ const App: React.FC = () => {
                     endpointOptions={endpointOptions}
                 />
 
+                <MessageList 
+                    messages={messages} 
+                    endpoint={endpoint} 
+                />
+
                 <PromptForm
                     prompt={prompt}
                     onPromptChange={handlePromptChange}
@@ -301,11 +398,6 @@ const App: React.FC = () => {
                 />
 
                 <ErrorMessage message={error}/>
-
-                <ResponseDisplay
-                    response={response}
-                    endpoint={endpoint}
-                />
 
                 {/* Clear chat button at bottom of page */}
                 <div className="clear-chat-container">
