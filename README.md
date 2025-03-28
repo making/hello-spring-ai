@@ -68,6 +68,12 @@ You can switch to any OpenAI compatible API endpoint by setting the following pr
 * `spring.ai.openai.base-url`
 * `spring.ai.openai.chat.options.model`
 
+To run the [fetch MCP server](https://github.com/zcaceres/fetch-mcp), you need to install [uv](https://docs.astral.sh/uv/). You can install uv using Homebrew:
+
+```bash
+brew install uv
+```
+
 ## Usage
 
 Access the application at `http://localhost:8080` and interact with the endpoints.
