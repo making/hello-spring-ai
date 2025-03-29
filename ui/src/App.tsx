@@ -1,5 +1,6 @@
 import {ChangeEvent, FormEvent, useState, useEffect} from 'react';
 import {Loader2, MessageCircle, Send, Settings, Trash2, User} from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 import './App.css';
 
 // Types definition
@@ -54,11 +55,13 @@ interface Message {
 interface MessageListProps {
     messages: Message[];
     endpoint: string;
+    renderMarkdown: boolean;
 }
 
 interface MessageItemProps {
     message: Message;
     endpoint: string;
+    renderMarkdown: boolean;
 }
 
 interface ClearChatButtonProps {
@@ -182,7 +185,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({message}) => {
 };
 
 // Message item component
-const MessageItem: React.FC<MessageItemProps> = ({message, endpoint}) => {
+const MessageItem: React.FC<MessageItemProps> = ({message, endpoint, renderMarkdown}) => {
     const isUser = message.messageType === 'USER';
 
     return (
@@ -196,7 +199,11 @@ const MessageItem: React.FC<MessageItemProps> = ({message, endpoint}) => {
                     {!isUser && <span className="endpoint-badge">{endpoint.substring(1)}</span>}
                 </div>
                 <div className="message-text">
-                    {message.text}
+                    {renderMarkdown ? (
+                        <ReactMarkdown>{message.text}</ReactMarkdown>
+                    ) : (
+                        message.text
+                    )}
                 </div>
             </div>
         </div>
@@ -204,7 +211,7 @@ const MessageItem: React.FC<MessageItemProps> = ({message, endpoint}) => {
 };
 
 // Message list component
-const MessageList: React.FC<MessageListProps> = ({messages, endpoint}) => {
+const MessageList: React.FC<MessageListProps> = ({messages, endpoint, renderMarkdown}) => {
     if (!messages || messages.length === 0) return null;
 
     return (
@@ -213,9 +220,34 @@ const MessageList: React.FC<MessageListProps> = ({messages, endpoint}) => {
                 <MessageItem 
                     key={`${message.messageType}-${index}`} 
                     message={message} 
-                    endpoint={endpoint} 
+                    endpoint={endpoint}
+                    renderMarkdown={renderMarkdown}
                 />
             ))}
+        </div>
+    );
+};
+
+interface RenderOptionProps {
+    renderMarkdown: boolean;
+    onRenderMarkdownChange: (e: ChangeEvent<HTMLInputElement>) => void;
+}
+
+// Render option component
+const RenderOption: React.FC<RenderOptionProps> = ({
+    renderMarkdown,
+    onRenderMarkdownChange
+}) => {
+    return (
+        <div className="render-option">
+            <label className="checkbox-label">
+                <input
+                    type="checkbox"
+                    checked={renderMarkdown}
+                    onChange={onRenderMarkdownChange}
+                />
+                <span>Render messages as Markdown</span>
+            </label>
         </div>
     );
 };
@@ -241,6 +273,7 @@ const App: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [endpoint, setEndpoint] = useState('/vanilla');
+    const [renderMarkdown, setRenderMarkdown] = useState(false); // Default is no rendering
 
     // Fetch message history when component mounts
     useEffect(() => {
@@ -352,6 +385,10 @@ const App: React.FC = () => {
     const handlePromptChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
         setPrompt(e.target.value);
     };
+    
+    const handleRenderMarkdownChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setRenderMarkdown(e.target.checked);
+    };
 
     const handleClearChat = async () => {
         setIsLoading(true);
@@ -389,7 +426,13 @@ const App: React.FC = () => {
 
                 <MessageList 
                     messages={messages} 
-                    endpoint={endpoint} 
+                    endpoint={endpoint}
+                    renderMarkdown={renderMarkdown}
+                />
+                
+                <RenderOption
+                    renderMarkdown={renderMarkdown}
+                    onRenderMarkdownChange={handleRenderMarkdownChange}
                 />
 
                 <PromptForm
