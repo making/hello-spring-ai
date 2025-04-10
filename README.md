@@ -97,7 +97,7 @@ EOF
 Then, run the app with `--spring.ai.mcp.client.stdio.servers-configuration=./mcp-servers-config.json`
 
 ```bash
-java -jar target/hello-spring-ai-0.0.1-SNAPSHOT.jar --spring.ai.openai.api-key=sk-YOUR_API_KEY --spring.ai.mcp.client.stdio.servers-configuration=./mcp-servers-config.json
+java -jar target/hello-spring-ai-0.0.1-SNAPSHOT.jar --spring.ai.openai.api-key=sk-YOUR_API_KEY --spring.ai.mcp.client.stdio.servers-configuration=file://$PWD/mcp-servers-config.json
 ```
 
 ## Usage
