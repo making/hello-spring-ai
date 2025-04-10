@@ -71,7 +71,7 @@ You can switch to any OpenAI compatible API endpoint by setting the following pr
 
 Now let's integrate with an MCP server, for example [fetch MCP server](https://github.com/zcaceres/fetch-mcp). 
 
-> [!NOTE] To run the [fetch MCP server](https://github.com/zcaceres/fetch-mcp), you need to install [uv](https://docs.astral.sh/uv/). You can install uv using Homebrew:
+> [!INFO] To run the [fetch MCP server](https://github.com/zcaceres/fetch-mcp), you need to install [uv](https://docs.astral.sh/uv/). You can install uv using Homebrew:
 > ```bash
 > brew install uv
 > ```
