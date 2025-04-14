@@ -126,7 +126,7 @@ const Header: React.FC<HeaderProps> = ({ onInfoClick }) => {
         <header className="header">
             <div className="header-left">
                 <MessageCircle/>
-                <h1>AI Prompt</h1>
+                <h1>Spring AI Chat</h1>
             </div>
             <div className="header-right">
                 <InfoButton onClick={onInfoClick} />
