@@ -144,7 +144,7 @@ const EndpointSelector: React.FC<EndpointSelectorProps> = ({
     return (
         <div className="endpoint-selector">
             <div className="endpoint-header">
-                <Settings size={18}/>
+                <Settings size={16}/>
                 <h3>Select Endpoint</h3>
             </div>
 
@@ -220,7 +220,7 @@ const MessageItem: React.FC<MessageItemProps> = ({message, endpoint, renderMarkd
     return (
         <div className={`message-item ${isUser ? 'user-message' : 'assistant-message'}`}>
             <div className="message-avatar">
-                {isUser ? <User size={20} /> : <MessageCircle size={20} />}
+                {isUser ? <User size={16} /> : <MessageCircle size={16} />}
             </div>
             <div className="message-content">
                 <div className="message-header">
@@ -315,7 +315,7 @@ const InfoButton: React.FC<InfoButtonProps> = ({onClick}) => {
             title="Show API Info"
             aria-label="Show API Information"
         >
-            <Info size={18} />
+            <Info size={16} />
         </button>
     );
 };

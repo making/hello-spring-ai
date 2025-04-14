@@ -19,7 +19,7 @@ body {
   justify-content: center;
   align-items: flex-start;
   min-height: 100vh;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .app-container {
@@ -36,7 +36,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1.5rem;
+  padding: 0.75rem 1rem;
   background-color: #4361ee;
   color: white;
 }
@@ -47,9 +47,9 @@ body {
 }
 
 .header-left svg {
-  width: 28px;
-  height: 28px;
-  margin-right: 12px;
+  width: 24px;
+  height: 24px;
+  margin-right: 8px;
 }
 
 .header-right {
@@ -58,7 +58,7 @@ body {
 }
 
 .header h1 {
-  font-size: 1.8rem;
+  font-size: 1.4rem;
   font-weight: 700;
 }
 
@@ -70,8 +70,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   transition: background-color 0.2s;
 }
@@ -86,21 +86,21 @@ body {
 }
 
 main {
-  padding: 1.5rem;
+  padding: 0.75rem;
 }
 
 .endpoint-selector {
-  margin-bottom: 1.5rem;
-  padding: 1rem;
+  margin-bottom: 0.75rem;
+  padding: 0.5rem;
   background-color: #f8f9fa;
-  border-radius: 8px;
+  border-radius: 6px;
   border: 1px solid #e9ecef;
 }
 
 .endpoint-header {
   display: flex;
   align-items: center;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   color: #4361ee;
 }
 
@@ -116,7 +116,7 @@ main {
 .endpoint-options {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .endpoint-option {
@@ -159,16 +159,16 @@ main {
 
 /* Message List Styles */
 .message-list {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.5rem;
 }
 
 .message-item {
   display: flex;
-  border-radius: 8px;
-  padding: 1rem;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
 }
 
 .user-message {
@@ -181,7 +181,7 @@ main {
 }
 
 .message-avatar {
-  margin-right: 12px;
+  margin-right: 8px;
   display: flex;
   align-items: flex-start;
   color: #4361ee;
@@ -198,7 +198,7 @@ main {
 .message-header {
   display: flex;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .message-sender {
@@ -219,8 +219,8 @@ main {
 .message-text h4,
 .message-text h5,
 .message-text h6 {
-  margin-top: 0.5rem;
-  margin-bottom: 0.3rem;
+  margin-top: 0.3rem;
+  margin-bottom: 0.2rem;
   padding: 0;
   font-weight: 600;
   line-height: 1.1;
@@ -249,22 +249,22 @@ main {
 
 .message-text p {
   margin-top: 0;
-  margin-bottom: 0.3rem;
+  margin-bottom: 0.2rem;
   padding: 0;
 }
 
 .message-text ul,
 .message-text ol {
-  margin-left: 0.5rem;
+  margin-left: 0.2rem;
   margin-top: 0;
-  margin-bottom: 0.1rem;
-  padding-left: 0.5rem;
+  margin-bottom: 0;
+  padding-left: 0.2rem;
 }
 
 .message-text li {
   margin: 0;
   padding: 0;
-  line-height: 1.05;
+  line-height: 1;
 }
 
 .message-text pre {
@@ -314,7 +314,7 @@ main {
 }
 
 .render-option {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -331,24 +331,24 @@ main {
 }
 
 .form-group {
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
 }
 
 .form-group label {
   display: block;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 500;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.3rem;
   color: #333;
 }
 
 .form-control {
   width: 100%;
-  min-height: 120px; /* Reduced height since we already show conversation */
-  padding: 1rem;
+  min-height: 100px; /* Reduced height further */
+  padding: 0.75rem;
   font-size: 1rem;
   border: 2px solid #ccc;
-  border-radius: 8px;
+  border-radius: 6px;
   background-color: white;
   transition: all 0.3s ease;
   resize: vertical;
@@ -364,11 +364,11 @@ main {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s ease;
 }
@@ -403,7 +403,7 @@ main {
 }
 
 .clear-chat-container {
-  margin-top: 2rem;
+  margin-top: 1rem;
   display: flex;
   justify-content: center;
 }
@@ -436,8 +436,8 @@ main {
 }
 
 .error-container {
-  margin-top: 1.5rem;
-  padding: 1rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
   background-color: #fee2e2;
   border-left: 4px solid #ef4444;
   border-radius: 6px;
