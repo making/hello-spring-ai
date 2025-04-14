@@ -1,6 +1,7 @@
 import {ChangeEvent, FormEvent, useState, useEffect} from 'react';
 import {Loader2, MessageCircle, Send, Settings, Trash2, User, Info} from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 import './App.css';
 
 // Types definition
@@ -56,9 +57,9 @@ interface Message {
         id?: string;
         role?: string;
     };
-    media: any[];
+    media: Array<unknown>;
     text: string;
-    toolCalls?: any[];
+    toolCalls?: Array<unknown>;
 }
 
 interface MessageListProps {
@@ -229,7 +230,7 @@ const MessageItem: React.FC<MessageItemProps> = ({message, endpoint, renderMarkd
                 </div>
                 <div className="message-text">
                     {renderMarkdown ? (
-                        <ReactMarkdown>{message.text}</ReactMarkdown>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.text}</ReactMarkdown>
                     ) : (
                         message.text
                     )}
@@ -275,7 +276,7 @@ const RenderOption: React.FC<RenderOptionProps> = ({
                     checked={renderMarkdown}
                     onChange={onRenderMarkdownChange}
                 />
-                <span>Render messages as Markdown</span>
+                <span>Render messages as Markdown (supports tables)</span>
             </label>
         </div>
     );
