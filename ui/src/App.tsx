@@ -289,7 +289,7 @@ const RenderOption: React.FC<RenderOptionProps> = ({
                     checked={renderMarkdown}
                     onChange={onRenderMarkdownChange}
                 />
-                <span>Render messages as Markdown (supports tables)</span>
+                <span>Render messages as Markdown</span>
             </label>
         </div>
     );
