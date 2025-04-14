@@ -1,9 +1,18 @@
 import {ChangeEvent, FormEvent, useState, useEffect} from 'react';
-import {Loader2, MessageCircle, Send, Settings, Trash2, User} from 'lucide-react';
+import {Loader2, MessageCircle, Send, Settings, Trash2, User, Info} from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import './App.css';
 
 // Types definition
+interface ApiInfo {
+    genai: {
+        'base-url': string;
+        'completions-path': string;
+        model: string;
+        temperature: string;
+    };
+}
+
 interface EndpointOption {
     id: string;
     value: string;
@@ -69,6 +78,17 @@ interface ClearChatButtonProps {
     isLoading: boolean;
 }
 
+interface ModalProps {
+    isOpen: boolean;
+    onClose: () => void;
+    title: string;
+    children: React.ReactNode;
+}
+
+interface InfoButtonProps {
+    onClick: () => void;
+}
+
 // Endpoint option component
 const EndpointOption: React.FC<EndpointOptionProps> = ({
     id,
@@ -97,11 +117,20 @@ const EndpointOption: React.FC<EndpointOptionProps> = ({
 };
 
 // Header component
-const Header: React.FC = () => {
+interface HeaderProps {
+    onInfoClick: () => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ onInfoClick }) => {
     return (
         <header className="header">
-            <MessageCircle/>
-            <h1>AI Prompt</h1>
+            <div className="header-left">
+                <MessageCircle/>
+                <h1>AI Prompt</h1>
+            </div>
+            <div className="header-right">
+                <InfoButton onClick={onInfoClick} />
+            </div>
         </header>
     );
 };
@@ -252,6 +281,45 @@ const RenderOption: React.FC<RenderOptionProps> = ({
     );
 };
 
+// Modal component
+const Modal: React.FC<ModalProps> = ({isOpen, onClose, title, children}) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="modal-overlay">
+            <div className="modal-container">
+                <div className="modal-header">
+                    <h2>{title}</h2>
+                    <button 
+                        className="modal-close" 
+                        onClick={onClose}
+                        aria-label="Close modal"
+                    >
+                        &times;
+                    </button>
+                </div>
+                <div className="modal-content">
+                    {children}
+                </div>
+            </div>
+        </div>
+    );
+};
+
+// Info button component
+const InfoButton: React.FC<InfoButtonProps> = ({onClick}) => {
+    return (
+        <button 
+            className="info-button" 
+            onClick={onClick}
+            title="Show API Info"
+            aria-label="Show API Information"
+        >
+            <Info size={18} />
+        </button>
+    );
+};
+
 // Clear chat button component
 const ClearChatButton: React.FC<ClearChatButtonProps> = ({onClick, isLoading}) => {
     return (
@@ -274,11 +342,44 @@ const App: React.FC = () => {
     const [error, setError] = useState('');
     const [endpoint, setEndpoint] = useState('/vanilla');
     const [renderMarkdown, setRenderMarkdown] = useState(false); // Default is no rendering
+    const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+    const [apiInfo, setApiInfo] = useState<ApiInfo | null>(null);
 
     // Fetch message history when component mounts
     useEffect(() => {
         fetchMessages();
     }, []);
+    
+    // Fetch API info
+    const fetchApiInfo = async () => {
+        try {
+            setIsLoading(true);
+            const response = await fetch('/actuator/info');
+            if (!response.ok) {
+                throw new Error(`Error: ${response.status}`);
+            }
+            const data = await response.json();
+            setApiInfo(data);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to load API information');
+        } finally {
+            setIsLoading(false);
+        }
+    };
+    
+    // Handle info button click
+    const handleInfoButtonClick = () => {
+        // Only fetch API info if it hasn't been loaded yet
+        if (!apiInfo) {
+            fetchApiInfo();
+        }
+        setIsInfoModalOpen(true);
+    };
+    
+    // Handle modal close
+    const handleCloseModal = () => {
+        setIsInfoModalOpen(false);
+    };
 
     // Fetch message history
     const fetchMessages = async () => {
@@ -415,7 +516,9 @@ const App: React.FC = () => {
 
     return (
         <div className="app-container">
-            <Header/>
+            <Header
+                onInfoClick={handleInfoButtonClick}
+            />
 
             <main>
                 <EndpointSelector
@@ -452,6 +555,35 @@ const App: React.FC = () => {
                     />
                 </div>
             </main>
+
+            {/* API Info Modal */}
+            <Modal
+                isOpen={isInfoModalOpen}
+                onClose={handleCloseModal}
+                title="OpenAI API Information"
+            >
+                {apiInfo ? (
+                    <div className="api-info">
+                        <div className="api-info-item">
+                            <strong>API URL:</strong> 
+                            <span>{apiInfo.genai['base-url'] + apiInfo.genai['completions-path']}</span>
+                        </div>
+                        <div className="api-info-item">
+                            <strong>Model:</strong> 
+                            <span>{apiInfo.genai.model}</span>
+                        </div>
+                        <div className="api-info-item">
+                            <strong>Temperature:</strong> 
+                            <span>{apiInfo.genai.temperature}</span>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="api-info-loading">
+                        <Loader2 className="spinner"/> 
+                        Loading API information...
+                    </div>
+                )}
+            </Modal>
         </div>
     );
 };
