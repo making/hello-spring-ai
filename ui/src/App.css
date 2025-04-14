@@ -3,6 +3,39 @@
   /* Additional app-specific styles can go here */
 }
 
+/* API Info Modal styles */
+.api-info h3 {
+  margin-top: 1.5em;
+  margin-bottom: 0.75em;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 0.5em;
+}
+
+.api-info h3:first-child {
+  margin-top: 0;
+}
+
+.api-info-item {
+  margin-bottom: 0.75em;
+  display: flex;
+  flex-direction: column;
+}
+
+.api-info-item strong {
+  margin-bottom: 0.25em;
+}
+
+@media (min-width: 576px) {
+  .api-info-item {
+    flex-direction: row;
+  }
+  
+  .api-info-item strong {
+    min-width: 150px;
+    margin-bottom: 0;
+  }
+}
+
 /* Markdown table styles */
 .message-text table {
   border-collapse: collapse;

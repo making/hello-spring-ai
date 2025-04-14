@@ -12,6 +12,19 @@ interface ApiInfo {
         model: string;
         temperature: string;
     };
+    build?: {
+        spring?: {
+            ai?: {
+                version: string;
+            };
+            boot?: {
+                version: string;
+            };
+            framework?: {
+                version: string;
+            };
+        };
+    };
 }
 
 interface EndpointOption {
@@ -313,8 +326,8 @@ const InfoButton: React.FC<InfoButtonProps> = ({onClick}) => {
         <button 
             className="info-button" 
             onClick={onClick}
-            title="Show API Info"
-            aria-label="Show API Information"
+            title="Show API and Framework Info"
+            aria-label="Show API and Framework Information"
         >
             <Info size={16} />
         </button>
@@ -561,10 +574,11 @@ const App: React.FC = () => {
             <Modal
                 isOpen={isInfoModalOpen}
                 onClose={handleCloseModal}
-                title="OpenAI API Information"
+                title="API Information"
             >
                 {apiInfo ? (
                     <div className="api-info">
+                        <h3>OpenAI API</h3>
                         <div className="api-info-item">
                             <strong>API URL:</strong> 
                             <span>{apiInfo.genai['base-url'] + apiInfo.genai['completions-path']}</span>
@@ -577,6 +591,30 @@ const App: React.FC = () => {
                             <strong>Temperature:</strong> 
                             <span>{apiInfo.genai.temperature}</span>
                         </div>
+                        
+                        {apiInfo.build?.spring && (
+                            <>
+                                <h3>Spring Framework</h3>
+                                {apiInfo.build.spring.ai && (
+                                    <div className="api-info-item">
+                                        <strong>Spring AI:</strong> 
+                                        <span>{apiInfo.build.spring.ai.version}</span>
+                                    </div>
+                                )}
+                                {apiInfo.build.spring.boot && (
+                                    <div className="api-info-item">
+                                        <strong>Spring Boot:</strong> 
+                                        <span>{apiInfo.build.spring.boot.version}</span>
+                                    </div>
+                                )}
+                                {apiInfo.build.spring.framework && (
+                                    <div className="api-info-item">
+                                        <strong>Spring Framework:</strong> 
+                                        <span>{apiInfo.build.spring.framework.version}</span>
+                                    </div>
+                                )}
+                            </>
+                        )}
                     </div>
                 ) : (
                     <div className="api-info-loading">
