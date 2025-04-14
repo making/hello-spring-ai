@@ -1,5 +1,5 @@
 import {ChangeEvent, FormEvent, useState, useEffect} from 'react';
-import {Loader2, MessageCircle, Send, Settings, Trash2, User, Info} from 'lucide-react';
+import {Loader2, Send, Settings, Trash2, User, Info, Brain} from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import './App.css';
@@ -139,7 +139,7 @@ const Header: React.FC<HeaderProps> = ({ onInfoClick }) => {
     return (
         <header className="header">
             <div className="header-left">
-                <MessageCircle/>
+                <Brain color="white" size={24} />
                 <h1>Spring AI Chat</h1>
             </div>
             <div className="header-right">
@@ -234,7 +234,7 @@ const MessageItem: React.FC<MessageItemProps> = ({message, endpoint, renderMarkd
     return (
         <div className={`message-item ${isUser ? 'user-message' : 'assistant-message'}`}>
             <div className="message-avatar">
-                {isUser ? <User size={16} /> : <MessageCircle size={16} />}
+                {isUser ? <User size={16} /> : <Brain size={16} color="#76b82a" />}
             </div>
             <div className="message-content">
                 <div className="message-header">

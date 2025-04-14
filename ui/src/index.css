@@ -8,7 +8,7 @@
 
 body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  background-color: #f8f9ff;
+  background-color: #f0f7e8; /* Spring AI lighter green background */
   color: #333;
   line-height: 1.6;
 }
@@ -37,7 +37,7 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 0.75rem 1rem;
-  background-color: #4361ee;
+  background-color: #76b82a; /* Spring AI green */
   color: white;
 }
 
@@ -101,7 +101,7 @@ main {
   display: flex;
   align-items: center;
   margin-bottom: 0.5rem;
-  color: #4361ee;
+  color: #76b82a; /* Spring AI green */
 }
 
 .endpoint-header svg {
@@ -130,7 +130,7 @@ main {
 }
 
 .endpoint-option:hover {
-  background-color: #f1f3f9;
+  background-color: #f0f7e8; /* Spring AI lighter green */
 }
 
 .endpoint-option input {
@@ -172,19 +172,19 @@ main {
 }
 
 .user-message {
-  background-color: #f1f3f9;
+  background-color: #f0f7e8; /* Spring AI light green */
 }
 
 .assistant-message {
   background-color: #f8f9fa;
-  border: 1px solid #e1e1e1;
+  border: 1px solid #e0efd1; /* Spring AI lighter border */
 }
 
 .message-avatar {
   margin-right: 8px;
   display: flex;
   align-items: flex-start;
-  color: #4361ee;
+  color: #76b82a; /* Spring AI green */
 }
 
 .user-message .message-avatar {
@@ -292,7 +292,7 @@ main {
 }
 
 .message-text a {
-  color: #4361ee;
+  color: #5d9321; /* Spring AI darker green */
   text-decoration: underline;
 }
 
@@ -356,8 +356,8 @@ main {
 
 .form-control:focus {
   outline: none;
-  border-color: #4361ee;
-  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+  border-color: #76b82a; /* Spring AI green */
+  box-shadow: 0 0 0 3px rgba(118, 184, 42, 0.3); /* Spring AI green with opacity */
 }
 
 .btn {
@@ -374,17 +374,17 @@ main {
 }
 
 .btn-primary {
-  background-color: #4361ee;
+  background-color: #76b82a; /* Spring AI green */
   color: white;
   width: 100%;
 }
 
 .btn-primary:hover {
-  background-color: #3a56d4;
+  background-color: #5d9321; /* Spring AI darker green */
 }
 
 .btn-primary:disabled {
-  background-color: #a5b4fc;
+  background-color: #c6e3a5; /* Spring AI light green */
   cursor: not-allowed;
 }
 
@@ -414,8 +414,8 @@ main {
 
 .endpoint-badge {
   font-size: 0.8rem;
-  background-color: #e9ecff;
-  color: #4361ee;
+  background-color: #f0f7e8; /* Spring AI light green background */
+  color: #5d9321; /* Spring AI darker green */
   padding: 0.25rem 0.5rem;
   border-radius: 4px;
   font-weight: 500;
@@ -506,7 +506,7 @@ main {
 }
 
 .modal-close:hover {
-  background-color: #f1f3f9;
+  background-color: #f0f7e8; /* Spring AI light green */
   color: #333;
 }
 
@@ -534,10 +534,10 @@ main {
 
 .api-info-item span {
   font-family: monospace;
-  background-color: #f1f3f9;
+  background-color: #f0f7e8; /* Spring AI light green */
   padding: 0.5rem;
   border-radius: 4px;
-  color: #4361ee;
+  color: #5d9321; /* Spring AI darker green */
   word-break: break-all;
 }
 

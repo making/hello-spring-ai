@@ -8,17 +8,24 @@ export default {
     extend: {
       colors: {
         primary: {
-          50: '#eef2ff',
-          100: '#e0e7ff',
-          200: '#c7d2fe',
-          300: '#a5b4fc',
-          400: '#818cf8',
-          500: '#6366f1',
-          600: '#4f46e5',
-          700: '#4338ca',
-          800: '#3730a3',
-          900: '#312e81',
+          50: '#f0f7e8',
+          100: '#e0efd1',
+          200: '#c6e3a5',
+          300: '#aad578',
+          400: '#8fc74c',
+          500: '#76b82a', // Spring Green
+          600: '#5d9321',
+          700: '#447018',
+          800: '#2c4c0f',
+          900: '#142806',
         },
+        spring: {
+          light: '#f0f7e8',
+          DEFAULT: '#76b82a', // Spring primary green
+          dark: '#5d9321',
+          gray: '#f8f9fa',
+          darkgray: '#e9ecef',
+        }
       },
       boxShadow: {
         'inner-lg': 'inset 0 2px 6px 2px rgb(0 0 0 / 0.1)',
