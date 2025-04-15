@@ -168,7 +168,7 @@ main {
 .message-item {
   display: flex;
   border-radius: 6px;
-  padding: 0.5rem 0.75rem;
+  padding: 1rem;
 }
 
 .user-message {
@@ -281,7 +281,6 @@ main {
   border-radius: 3px;
   padding: 0.2rem 0.4rem;
   font-family: monospace;
-  font-size: 0.9em;
 }
 
 .message-text blockquote {
