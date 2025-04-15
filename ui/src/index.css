@@ -273,16 +273,27 @@ main {
 
 .message-text ul,
 .message-text ol {
-  margin-left: 1rem; /* Increased for better indentation */
-  margin-top: 0.25rem;
-  margin-bottom: 0.5rem; /* Added bottom margin for spacing */
-  padding-left: 0.5rem; /* Increased padding */
+  margin: 0; /* No margins */
+  padding-left: 1.5rem; /* Space for list markers */
+  list-style-position: outside; /* Ensures numbers appear outside */
+  font-size: 1rem; /* Consistent font size */
 }
 
+/* Completely reset styles for list items */
 .message-text li {
-  margin: 0;
-  padding: 0;
-  line-height: 1.4; /* Updated to match the message-text line-height for consistency */
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  /* Force single line height */
+  line-height: 1em;
+}
+
+/* Adjust the positioning of list items content */
+.message-text li p {
+  margin: 0; /* Remove margins */
+  padding: 0; /* Remove padding */
+  display: inline; /* Make paragraphs inline */
 }
 
 .message-text pre {
