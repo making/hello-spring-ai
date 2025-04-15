@@ -234,8 +234,9 @@ const MessageItem: React.FC<MessageItemProps> = ({message, endpoint, renderMarkd
 
     return (
         <div className={`message-item ${isUser ? 'user-message' : 'assistant-message'}`}>
+            {/* Increased icon size from 16 to 20 for better visibility and alignment */}
             <div className="message-avatar">
-                {isUser ? <User size={16} /> : <Brain size={16} color="#76b82a" />}
+                {isUser ? <User size={20} /> : <Brain size={20} color="#76b82a" />}
             </div>
             <div className="message-content">
                 <div className="message-header">
@@ -361,7 +362,7 @@ const App: React.FC = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
     const [endpoint, setEndpoint] = useState('/vanilla');
-    const [renderMarkdown, setRenderMarkdown] = useState(false); // Default is no rendering
+    const [renderMarkdown, setRenderMarkdown] = useState(true); // Default is now true for Markdown rendering
     const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
     const [apiInfo, setApiInfo] = useState<ApiInfo | null>(null);
 

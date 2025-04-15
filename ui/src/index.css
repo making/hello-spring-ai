@@ -162,29 +162,46 @@ main {
   margin-bottom: 0.75rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem; /* Increased gap between messages */
 }
 
 .message-item {
   display: flex;
-  border-radius: 6px;
-  padding: 1rem;
+  border-radius: 8px; /* Increased border radius */
+  padding: 1rem 1.25rem; /* Increased horizontal padding */
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); /* Subtle shadow for depth */
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth transition for new messages */
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .user-message {
   background-color: #f0f7e8; /* Spring AI light green */
+  border-top-right-radius: 2px; /* Reduced radius on one corner for visual interest */
 }
 
 .assistant-message {
   background-color: #f8f9fa;
   border: 1px solid #e0efd1; /* Spring AI lighter border */
+  border-top-left-radius: 2px; /* Reduced radius on one corner for visual interest */
 }
 
 .message-avatar {
-  margin-right: 8px;
+  margin-right: 12px; /* Increased spacing between avatar and content */
   display: flex;
-  align-items: flex-start;
+  align-items: center; /* Changed from flex-start to center for vertical alignment */
   color: #76b82a; /* Spring AI green */
+  height: 24px; /* Fixed height to match the header line height */
 }
 
 .user-message .message-avatar {
@@ -199,6 +216,7 @@ main {
   display: flex;
   align-items: center;
   margin-bottom: 0.25rem;
+  height: 24px; /* Added fixed height to ensure consistent alignment */
 }
 
 .message-sender {
@@ -209,7 +227,7 @@ main {
 
 .message-text {
   white-space: pre-wrap;
-  line-height: 1;
+  line-height: 1.4; /* Increased from 1 to 1.4 for better readability */
 }
 
 /* Markdown styling */
@@ -249,22 +267,22 @@ main {
 
 .message-text p {
   margin-top: 0;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.5rem; /* Increased for better spacing between paragraphs */
   padding: 0;
 }
 
 .message-text ul,
 .message-text ol {
-  margin-left: 0.2rem;
-  margin-top: 0;
-  margin-bottom: 0;
-  padding-left: 0.2rem;
+  margin-left: 1rem; /* Increased for better indentation */
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem; /* Added bottom margin for spacing */
+  padding-left: 0.5rem; /* Increased padding */
 }
 
 .message-text li {
   margin: 0;
   padding: 0;
-  line-height: 1;
+  line-height: 1.4; /* Updated to match the message-text line-height for consistency */
 }
 
 .message-text pre {
@@ -549,7 +567,7 @@ main {
 
 @media (max-width: 640px) {
   #root {
-    padding: 1rem;
+    padding: 0.5rem;
   }
   
   .endpoint-options {
@@ -558,6 +576,14 @@ main {
   
   .endpoint-option {
     min-width: 100%;
+  }
+  
+  .message-item {
+    padding: 0.75rem 1rem; /* Reduce padding on mobile */
+  }
+  
+  .message-avatar {
+    margin-right: 8px; /* Reduced spacing on mobile */
   }
   
   .modal-container {
