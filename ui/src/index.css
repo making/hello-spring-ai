@@ -389,16 +389,16 @@ main {
 }
 
 .btn-danger {
-  background-color: #ef4444;
-  color: white;
+  background-color: #f3cc30; /* Spring AI yellow color */
+  color: #333; /* darker text for better contrast */
 }
 
 .btn-danger:hover {
-  background-color: #dc2626;
+  background-color: #e0bd28; /* darker yellow for hover state */
 }
 
 .btn-danger:disabled {
-  background-color: #fca5a5;
+  background-color: #f8e284; /* lighter yellow when disabled */
   cursor: not-allowed;
 }
 
