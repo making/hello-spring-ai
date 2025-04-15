@@ -230,6 +230,7 @@ const ErrorMessage: React.FC<ErrorMessageProps> = ({message}) => {
 // Message item component
 const MessageItem: React.FC<MessageItemProps> = ({message, endpoint, renderMarkdown}) => {
     const isUser = message.messageType === 'USER';
+    const isLoading = message.messageType === 'ASSISTANT' && message.text === '...';
 
     return (
         <div className={`message-item ${isUser ? 'user-message' : 'assistant-message'}`}>
@@ -242,7 +243,12 @@ const MessageItem: React.FC<MessageItemProps> = ({message, endpoint, renderMarkd
                     {!isUser && <span className="endpoint-badge">{endpoint.substring(1)}</span>}
                 </div>
                 <div className="message-text">
-                    {renderMarkdown ? (
+                    {isLoading ? (
+                        <div className="loading-message">
+                            <Loader2 size={16} className="spinner" />
+                            <span>Thinking...</span>
+                        </div>
+                    ) : renderMarkdown ? (
                         <ReactMarkdown remarkPlugins={[remarkGfm]}>{message.text}</ReactMarkdown>
                     ) : (
                         message.text
@@ -451,8 +457,23 @@ const App: React.FC = () => {
             text: prompt
         };
 
-        // Optimistically add user message to the UI
-        setMessages(prevMessages => [...prevMessages, userMessage]);
+        // Create initial loading placeholder message from assistant
+        const loadingMessage: Message = {
+            messageType: 'ASSISTANT',
+            metadata: {
+                messageType: 'ASSISTANT',
+                finishReason: 'STOP',
+                refusal: '',
+                index: 0,
+                role: 'ASSISTANT'
+            },
+            media: [],
+            text: '...',
+            toolCalls: []
+        };
+
+        // Add both user message and loading message to the UI
+        setMessages(prevMessages => [...prevMessages, userMessage, loadingMessage]);
 
         // Clear the input field after sending
         setPrompt('');
@@ -466,30 +487,46 @@ const App: React.FC = () => {
 
             const responseText = await response.text();
             
-            // Add assistant response to messages
-            const assistantMessage: Message = {
-                messageType: 'ASSISTANT',
-                metadata: {
-                    messageType: 'ASSISTANT',
-                    finishReason: 'STOP',
-                    refusal: '',
-                    index: 0,
-                    role: 'ASSISTANT'
-                },
-                media: [],
-                text: responseText,
-                toolCalls: []
-            };
-
-            setMessages(prevMessages => [...prevMessages, assistantMessage]);
+            // Replace loading message with actual assistant response
+            setMessages(prevMessages => {
+                // Create a copy of messages but replace the last one (loading message)
+                // with the actual response
+                const updatedMessages = [...prevMessages];
+                if (updatedMessages.length > 0) {
+                    // Update the last message (loading message) with the actual response
+                    updatedMessages[updatedMessages.length - 1] = {
+                        messageType: 'ASSISTANT',
+                        metadata: {
+                            messageType: 'ASSISTANT',
+                            finishReason: 'STOP',
+                            refusal: '',
+                            index: 0,
+                            role: 'ASSISTANT'
+                        },
+                        media: [],
+                        text: responseText,
+                        toolCalls: []
+                    };
+                }
+                return updatedMessages;
+            });
         } catch (err) {
+            // In case of error, remove the loading message and show error
+            setMessages(prevMessages => {
+                // Remove the loading message
+                const updatedMessages = [...prevMessages];
+                if (updatedMessages.length > 0) {
+                    updatedMessages.pop();
+                }
+                return updatedMessages;
+            });
             setError(err instanceof Error ? err.message : 'An unknown error occurred');
         } finally {
             setIsLoading(false);
 
-
-            // Refresh messages to ensure we have the latest state
-            await fetchMessages();
+            // We don't need to fetch messages here anymore since we're
+            // managing the state directly
+            // await fetchMessages();
         }
     };
 
