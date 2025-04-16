@@ -56,7 +56,7 @@ public class HelloController {
 			.user(prompt)
 			.stream()
 			.content()
-			.windowUntil(s -> s.endsWith(".") || s.endsWith("。"))
+			.windowUntil(s -> s.endsWith("\n"))
 			.flatMap(flux -> flux.map(String::trim).collect(Collectors.joining()));
 	}
 
@@ -78,7 +78,7 @@ public class HelloController {
 			.tools(mcpTools)
 			.stream()
 			.content()
-			.windowUntil(s -> s.endsWith(".") || s.endsWith("。"))
+			.windowUntil(s -> s.endsWith("\n"))
 			.flatMap(flux -> flux.map(String::trim).collect(Collectors.joining()));
 	}
 
