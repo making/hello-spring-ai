@@ -106,7 +106,7 @@ Access the application at `http://localhost:8080` and interact with the endpoint
 
 When running the executable JAR, you can access the UI in your browser at `http://localhost:8080`.
 
-<img width="1024" alt="Image" src="https://github.com/user-attachments/assets/dc5e8139-1c12-480e-be6f-3fe3a21c34ad" />
+<img width="1012" alt="Image" src="https://github.com/user-attachments/assets/ece4c575-f1ea-44ab-b25c-0990956d9016" />
 
 ## Contributing
 
