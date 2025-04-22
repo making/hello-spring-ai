@@ -58,6 +58,8 @@ interface PromptFormProps {
 
 interface ErrorMessageProps {
     message: string;
+    onClose?: () => void;
+    isPopup?: boolean;
 }
 
 interface Message {
@@ -216,13 +218,75 @@ const PromptForm: React.FC<PromptFormProps> = ({prompt, onPromptChange, onSubmit
 };
 
 // Error message component
-const ErrorMessage: React.FC<ErrorMessageProps> = ({message}) => {
+const ErrorMessage: React.FC<ErrorMessageProps> = ({message, onClose, isPopup = false}) => {
     if (!message) return null;
 
+    // Try to parse the error message as JSON if it's a string
+    let errorTitle = "Error";
+    let errorMessage = message;
+
+    try {
+        // Check if message is a JSON string
+        if (typeof message === 'string' && (message.startsWith('{') || message.includes('Internal Server Error'))) {
+            // If it contains "Internal Server Error", it might be a JSON error response
+            const jsonMatch = message.match(/{.*}/s);
+            if (jsonMatch) {
+                const errorObj = JSON.parse(jsonMatch[0]);
+                if (errorObj.error && errorObj.message) {
+                    errorTitle = errorObj.error;
+                    errorMessage = errorObj.message;
+                }
+            }
+        }
+    } catch (e) {
+        // If parsing fails, just use the original message
+        console.error("Failed to parse error message:", e);
+    }
+
+    // If it's a popup dialog, render it as a modal
+    if (isPopup) {
+        return (
+            <div className="error-modal-overlay">
+                <div className="error-modal-container">
+                    <div className="error-modal-header">
+                        <h2 className="error-modal-title">
+                            <div className="error-icon">!</div>
+                            {errorTitle}
+                        </h2>
+                        <button 
+                            className="error-modal-close" 
+                            onClick={onClose}
+                            aria-label="Close error dialog"
+                        >
+                            &times;
+                        </button>
+                    </div>
+                    <div className="error-modal-content">
+                        <p className="error-message">{errorMessage}</p>
+                    </div>
+                    <div className="error-modal-footer">
+                        <button 
+                            className="btn btn-primary error-dismiss-btn" 
+                            onClick={onClose}
+                        >
+                            OK
+                        </button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Otherwise render the inline error message
     return (
         <div className="error-container">
-            <p>Error</p>
-            <p>{message}</p>
+            <div className="error-icon-container">
+                <div className="error-icon">!</div>
+            </div>
+            <div className="error-content">
+                <p className="error-title">{errorTitle}</p>
+                <p className="error-message">{errorMessage}</p>
+            </div>
         </div>
     );
 };
@@ -365,6 +429,8 @@ const App: React.FC = () => {
     const [renderMarkdown, setRenderMarkdown] = useState(true); // Default is now true for Markdown rendering
     const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
     const [apiInfo, setApiInfo] = useState<ApiInfo | null>(null);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [__, setIsErrorPopupOpen] = useState(false);
 
     // Fetch message history when component mounts
     useEffect(() => {
@@ -383,6 +449,7 @@ const App: React.FC = () => {
             setApiInfo(data);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to load API information');
+            setIsErrorPopupOpen(true);
         } finally {
             setIsLoading(false);
         }
@@ -401,6 +468,12 @@ const App: React.FC = () => {
     const handleCloseModal = () => {
         setIsInfoModalOpen(false);
     };
+    
+    // Handle error popup close
+    const handleCloseErrorPopup = () => {
+        setIsErrorPopupOpen(false);
+        setError('');
+    };
 
     // Fetch message history
     const fetchMessages = async () => {
@@ -413,6 +486,7 @@ const App: React.FC = () => {
             setMessages(data);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Failed to load message history');
+            setIsErrorPopupOpen(true);
         }
     };
 
@@ -521,7 +595,43 @@ const App: React.FC = () => {
                 }
                 return updatedMessages;
             });
-            setError(err instanceof Error ? err.message : 'An unknown error occurred');
+            
+            // Enhanced error handling for server responses
+            if (err instanceof Error) {
+                // Check if it's a response error with JSON content
+                if (err.message.includes('Error: 5') || err.message.includes('Error: 4')) {
+                    // Try to extract JSON error from the error message if it exists
+                    try {
+                        // First, check if we can get the response text
+                        const errorResponse = await fetch(`${endpoint}?${new URLSearchParams({prompt})}`);
+                        if (!errorResponse.ok) {
+                            const errorBody = await errorResponse.text();
+                            try {
+                                // Try to parse as JSON
+                                JSON.parse(errorBody);
+                                setError(errorBody);
+                                return;
+                            } catch {
+                                // If not JSON, just display the text
+                                setError(errorBody || err.message);
+                                return;
+                            }
+                        }
+                    } catch {
+                        // If we couldn't fetch the response text, use the error message
+                        setError(err.message);
+                    }
+                } else {
+                    // If it's not a response error, use the error message
+                    setError(err.message);
+                }
+            } else {
+                // If not an Error instance
+                setError('An unknown error occurred');
+            }
+            
+            // Show error popup
+            setIsErrorPopupOpen(true);
         } finally {
             setIsLoading(false);
 
@@ -559,8 +669,12 @@ const App: React.FC = () => {
             setMessages([]);
             setError('');
         } catch (err) {
+            // Set error message
             setError(
                 err instanceof Error ? err.message : 'An error occurred while clearing the chat');
+            
+            // Show error popup
+            setIsErrorPopupOpen(true);
         } finally {
             setIsLoading(false);
         }
@@ -597,8 +711,6 @@ const App: React.FC = () => {
                     isLoading={isLoading}
                 />
 
-                <ErrorMessage message={error}/>
-
                 {/* Clear chat button at bottom of page */}
                 <div className="clear-chat-container">
                     <ClearChatButton
@@ -607,6 +719,15 @@ const App: React.FC = () => {
                     />
                 </div>
             </main>
+
+            {/* Error Popup Dialog - Now shows whenever there's an error message */}
+            {error && (
+                <ErrorMessage 
+                    message={error}
+                    onClose={handleCloseErrorPopup}
+                    isPopup={true}
+                />
+            )}
 
             {/* API Info Modal */}
             <Modal
