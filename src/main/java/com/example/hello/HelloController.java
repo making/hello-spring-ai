@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.memory.InMemoryChatMemory;
+import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.mcp.SyncMcpToolCallbackProvider;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ public class HelloController {
 
 	private final SyncMcpToolCallbackProvider mcpTools;
 
-	private final ChatMemory chatMemory = new InMemoryChatMemory();
+	private final ChatMemory chatMemory = MessageWindowChatMemory.builder().build();
 
 	public HelloController(ChatClient.Builder chatClientBuilder, SyncMcpToolCallbackProvider mcpTools,
 			HttpSession httpSession) {
@@ -67,7 +67,7 @@ public class HelloController {
 
 	@GetMapping(path = "/mcp")
 	public String mcp(@RequestParam(defaultValue = "What time is it now?") String prompt) {
-		return this.chatClient.prompt().messages().user(prompt).tools(mcpTools).call().content();
+		return this.chatClient.prompt().messages().user(prompt).toolCallbacks(mcpTools).call().content();
 	}
 
 	@PostMapping(path = "/mcp", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
@@ -75,7 +75,7 @@ public class HelloController {
 		return this.chatClient.prompt()
 			.messages()
 			.user(prompt)
-			.tools(mcpTools)
+			.toolCallbacks(mcpTools)
 			.stream()
 			.content()
 			.windowUntil(s -> s.endsWith("\n"))
@@ -88,9 +88,8 @@ public class HelloController {
 	}
 
 	@GetMapping(path = "/messages")
-	public List<Message> chatMessages(HttpSession session,
-			@RequestParam(required = false, defaultValue = "30") int lastN) {
-		return this.chatMemory.get(session.getId(), lastN);
+	public List<Message> chatMessages(HttpSession session) {
+		return this.chatMemory.get(session.getId());
 	}
 
 }

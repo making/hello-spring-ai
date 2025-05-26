@@ -1,19 +1,18 @@
 package com.example.hello;
 
 import jakarta.servlet.http.HttpSession;
-import org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor;
+import org.springframework.ai.chat.client.ChatClientRequest;
+import org.springframework.ai.chat.client.ChatClientResponse;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
-import org.springframework.ai.chat.client.advisor.api.AdvisedRequest;
-import org.springframework.ai.chat.client.advisor.api.AdvisedResponse;
 import org.springframework.ai.chat.client.advisor.api.Advisor;
-import org.springframework.ai.chat.client.advisor.api.CallAroundAdvisor;
-import org.springframework.ai.chat.client.advisor.api.CallAroundAdvisorChain;
-import org.springframework.ai.chat.client.advisor.api.StreamAroundAdvisor;
-import org.springframework.ai.chat.client.advisor.api.StreamAroundAdvisorChain;
+import org.springframework.ai.chat.client.advisor.api.CallAdvisor;
+import org.springframework.ai.chat.client.advisor.api.CallAdvisorChain;
+import org.springframework.ai.chat.client.advisor.api.StreamAdvisor;
+import org.springframework.ai.chat.client.advisor.api.StreamAdvisorChain;
 import org.springframework.ai.chat.memory.ChatMemory;
 import reactor.core.publisher.Flux;
 
-public class PerSessionMessageChatMemoryAdvisor implements CallAroundAdvisor, StreamAroundAdvisor {
+public class PerSessionMessageChatMemoryAdvisor implements CallAdvisor, StreamAdvisor {
 
 	private final ChatMemory chatMemory;
 
@@ -25,19 +24,22 @@ public class PerSessionMessageChatMemoryAdvisor implements CallAroundAdvisor, St
 	}
 
 	@Override
-	public AdvisedResponse aroundCall(AdvisedRequest advisedRequest, CallAroundAdvisorChain chain) {
+	public ChatClientResponse adviseCall(ChatClientRequest chatClientRequest, CallAdvisorChain callAdvisorChain) {
 		String sessionId = httpSession.getId();
-		MessageChatMemoryAdvisor delegate = new MessageChatMemoryAdvisor(chatMemory, sessionId,
-				AbstractChatMemoryAdvisor.DEFAULT_CHAT_MEMORY_RESPONSE_SIZE);
-		return delegate.aroundCall(advisedRequest, chain);
+		MessageChatMemoryAdvisor delegate = MessageChatMemoryAdvisor.builder(this.chatMemory)
+			.conversationId(sessionId)
+			.build();
+		return delegate.adviseCall(chatClientRequest, callAdvisorChain);
 	}
 
 	@Override
-	public Flux<AdvisedResponse> aroundStream(AdvisedRequest advisedRequest, StreamAroundAdvisorChain chain) {
+	public Flux<ChatClientResponse> adviseStream(ChatClientRequest chatClientRequest,
+			StreamAdvisorChain streamAdvisorChain) {
 		String sessionId = httpSession.getId();
-		MessageChatMemoryAdvisor delegate = new MessageChatMemoryAdvisor(chatMemory, sessionId,
-				AbstractChatMemoryAdvisor.DEFAULT_CHAT_MEMORY_RESPONSE_SIZE);
-		return delegate.aroundStream(advisedRequest, chain);
+		MessageChatMemoryAdvisor delegate = MessageChatMemoryAdvisor.builder(this.chatMemory)
+			.conversationId(sessionId)
+			.build();
+		return delegate.adviseStream(chatClientRequest, streamAdvisorChain);
 	}
 
 	@Override
